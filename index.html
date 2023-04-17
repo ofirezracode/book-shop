@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/modal.css" />
+    <title>Books</title>
+  </head>
+
+  <body onload="onInit()">
+    <main class="main-content-container">
+      <section class="books">
+        <header>
+          <h1 data-trans="page-header">Bookie's Books</h1>
+        </header>
+        <div class="toolbar">
+          <button data-trans="create-new-book" onclick="onAddBook()" class="new-book-button">Create a new book</button>
+          <div class="filters">
+            <div class="filter name-filter">
+              <input
+                data-trans="search-book"
+                class="name-input"
+                type="text"
+                oninput="onSetFilterBy({name: this.value})"
+                placeholder="Search for a book..."
+              />
+              <img class="icon search-icon" src="https://cdn-icons-png.flaticon.com/512/149/149852.png" />
+            </div>
+            <div class="filter min-rate-filter">
+              <label data-trans="book-rate" for="rate-filter">Minimum Rate</label>
+              <select id="rate-filter" onchange="onSetFilterBy({rate: this.value})">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+            <div class="filter max-price-filter">
+              <label data-trans="book-price"> Max Price (<span class="curr-max-price"></span>)</label>
+              <input
+                type="range"
+                min="0"
+                max="300"
+                class="max-price-slider"
+                onchange="this.title=this.value;onSetFilterBy({maxPrice: this.value})"
+              />
+            </div>
+          </div>
+        </div>
+        <table class="books-table-container"></table>
+      </section>
+      <section class="pagination">
+        <button onclick="onPageChange({direction:-1})" class="pagination-btn pagination-back">
+          <img class="icon pagination-icon pagination-icon-back" src="https://cdn-icons-png.flaticon.com/512/2732/2732652.png" />
+        </button>
+        <div class="pagination pagination-pages"></div>
+        <button onclick="onPageChange({direction:1})" class="pagination-btn pagination-next">
+          <img class="icon pagination-icon pagination-icon-next" src="https://cdn-icons-png.flaticon.com/512/9126/9126127.png" />
+        </button>
+      </section>
+
+      <div onclick="onCloseModal()" class="modal-background closed"></div>
+      <div class="modal closed">
+        <figure>
+          <img
+            class="book-img"
+            src="https://images.unsplash.com/photo-1680952120987-94e0b0b72a6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1172&q=80z"
+          />
+        </figure>
+        <article class="modal-content">
+          <div class="book-info">
+            <h3 class="book-name">%%NAME%%</h3>
+            <p class="book-price">%%PRICE%%</p>
+            <div class="book-rating-container">
+              <button onclick="onUpdateBookRating(1)" class="rating-btn rating-increase-btn">+</button>
+              <p class="book-rating">11</p>
+              <button onclick="onUpdateBookRating(-1)" class="rating-btn rating-decrease-btn">-</button>
+            </div>
+            <p class="book-description">%%DESCRIPTION%%</p>
+          </div>
+          <button data-trans="modal-close" class="modal-btn" onclick="onCloseModal()">Close</button>
+        </article>
+      </div>
+    </main>
+
+    <div onclick="onLocalizationMenuClick()" class="localization">
+      <img class="localization-icon" src="https://cdn-icons-png.flaticon.com/512/2889/2889312.png" />
+    </div>
+    <ul class="lanuages hidden">
+      <li onclick="onLocaleClick('he')">
+        <img class="localization-icon lang-he" src="https://cdn-icons-png.flaticon.com/512/3013/3013989.png" />
+      </li>
+      <li onclick="onLocaleClick('en')">
+        <img class="localization-icon lang-en" src="https://cdn-icons-png.flaticon.com/512/3200/3200271.png" />
+      </li>
+    </ul>
+
+    <script src="js/services/util.service.js"></script>
+    <script src="js/_books.js"></script>
+    <script src="js/services/i18n.service.js"></script>
+    <script src="js/i18n.controller.js"></script>
+    <script src="js/services/books.service.js"></script>
+    <script src="js/books.controller.js"></script>
+  </body>
+</html>
