@@ -40,7 +40,7 @@ body.rtl {
   background-color: #528e59;
 
   width: 80vw;
-  height: 66.8rem;
+  height: 71rem;
   padding: 1.2rem 2.4rem 2.4rem 2.4rem;
 
   border: 2px solid #85c18c;
@@ -61,10 +61,17 @@ body.rtl {
 
 .books h1 {
   font-size: 3.2rem;
-  margin-block-end: 1.2rem;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(max-content, 2fr)) minmax(max-content, 3fr);
+  gap: 2.4rem;
+  justify-items: start;
 }
 
 .new-book-button {
+  grid-column: span 3;
   flex-grow: 0;
   width: fit-content;
   border: none;
@@ -75,19 +82,6 @@ body.rtl {
   background-color: unset;
   color: #94c7e1;
   text-decoration: underline;
-}
-
-.toolbar {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 2.4rem;
-}
-
-.filters {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  gap: 3.2rem;
 }
 
 .filter {

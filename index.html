@@ -20,43 +20,42 @@
         </header>
         <div class="toolbar">
           <button data-trans="create-new-book" onclick="onAddBook()" class="new-book-button">Create a new book</button>
-          <div class="filters">
-            <div class="filter name-filter">
-              <input
-                data-trans="search-book"
-                class="name-input"
-                type="text"
-                oninput="onSetFilterBy({name: this.value})"
-                placeholder="Search for a book..."
-              />
-              <img class="icon search-icon" src="https://cdn-icons-png.flaticon.com/512/149/149852.png" />
-            </div>
-            <div class="filter min-rate-filter">
-              <label data-trans="book-rate" for="rate-filter">Minimum Rate</label>
-              <select id="rate-filter" onchange="onSetFilterBy({rate: this.value})">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-              </select>
-            </div>
-            <div class="filter max-price-filter">
-              <label data-trans="book-price"> Max Price (<span class="curr-max-price"></span>)</label>
-              <input
-                type="range"
-                min="0"
-                max="300"
-                class="max-price-slider"
-                onchange="this.title=this.value;onSetFilterBy({maxPrice: this.value})"
-              />
-            </div>
+          <div class="filter name-filter">
+            <input
+              data-trans="search-book"
+              class="name-input"
+              type="text"
+              oninput="onSetFilterBy({name: this.value})"
+              placeholder="Search for a book..."
+            />
+            <img class="icon search-icon" src="https://cdn-icons-png.flaticon.com/512/149/149852.png" />
+          </div>
+
+          <div class="filter max-price-filter">
+            <label data-trans="book-price"> Max Price (<span class="curr-max-price"></span>)</label>
+            <input
+              type="range"
+              min="0"
+              max="300"
+              class="max-price-slider"
+              onchange="this.title=this.value;onSetFilterBy({maxPrice: this.value})"
+            />
+          </div>
+          <div class="filter min-rate-filter">
+            <label data-trans="book-rate" for="rate-filter">Minimum Rate</label>
+            <select id="rate-filter" onchange="onSetFilterBy({rate: this.value})">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
           </div>
         </div>
         <table class="books-table-container"></table>
