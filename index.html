@@ -32,7 +32,7 @@
           </div>
 
           <div class="filter max-price-filter">
-            <label data-trans="book-price"> Max Price (<span class="curr-max-price"></span>)</label>
+            <label data-trans="book-price"> Max Price </label> (<span class="curr-max-price"></span>)
             <input
               type="range"
               min="0"
@@ -98,14 +98,15 @@
       <img class="localization-icon" src="https://cdn-icons-png.flaticon.com/512/2889/2889312.png" />
     </div>
     <ul class="lanuages hidden">
-      <li onclick="onLocaleClick('he')">
+      <li onclick="changeLocale('he')">
         <img class="localization-icon lang-he" src="https://cdn-icons-png.flaticon.com/512/3013/3013989.png" />
       </li>
-      <li onclick="onLocaleClick('en')">
+      <li onclick="changeLocale('en')">
         <img class="localization-icon lang-en" src="https://cdn-icons-png.flaticon.com/512/3200/3200271.png" />
       </li>
     </ul>
 
+    <script src="js/lib/hammer.min.js"></script>
     <script src="js/services/util.service.js"></script>
     <script src="js/_books.js"></script>
     <script src="js/services/i18n.service.js"></script>

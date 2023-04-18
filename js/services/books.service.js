@@ -44,6 +44,20 @@ function getBooks() {
   )
   gPagesAmount = Math.ceil(books.length / PAGE_SIZE)
   const startIdx = gPageIdx > gPagesAmount ? 0 : gPageIdx * PAGE_SIZE
+
+  books.forEach((book, i) => {
+    if (i !== 0) {
+      book.prev = books[i - 1].id
+    } else {
+      book.prev = null
+    }
+    if (i !== books.length - 1) {
+      book.next = books[i + 1].id
+    } else {
+      book.next = null
+    }
+  })
+
   return books.slice(startIdx, startIdx + PAGE_SIZE)
 }
 

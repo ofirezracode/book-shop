@@ -1,12 +1,15 @@
 'use strict'
 
-let currentlyReadBook
+let gCurrentlyReadBook
 
 function onInit() {
   renderFilterByQueryStringParams()
   renderMaxPriceFilter()
   renderBooksTable()
+  formatPage(getLang())
   initPagination()
+  doTrans()
+  configureSwiping()
 }
 
 function renderBooksTable() {
@@ -75,14 +78,14 @@ function generateTableHTMLContent(books) {
 
 function onReadBook(bookId) {
   const MAX_DESCRIPTION_LENGTH = 340
-  currentlyReadBook = getBookById(bookId)
+  gCurrentlyReadBook = getBookById(bookId)
   const elModalBg = document.querySelector('.modal-background')
   const elModal = document.querySelector('.modal')
-  elModal.querySelector('.book-img').src = currentlyReadBook.imgUrl
-  elModal.querySelector('.book-name').innerText = currentlyReadBook.name
-  elModal.querySelector('.book-price').innerText = currentlyReadBook.price
-  elModal.querySelector('.book-rating').innerText = currentlyReadBook.rate
-  let bookDescriptionShortened = currentlyReadBook.desc
+  elModal.querySelector('.book-img').src = gCurrentlyReadBook.imgUrl
+  elModal.querySelector('.book-name').innerText = gCurrentlyReadBook.name
+  formatModalPrices(gCurrentlyReadBook.price)
+  elModal.querySelector('.book-rating').innerText = gCurrentlyReadBook.rate
+  let bookDescriptionShortened = gCurrentlyReadBook.desc
   if (bookDescriptionShortened.length > MAX_DESCRIPTION_LENGTH)
     bookDescriptionShortened = bookDescriptionShortened.slice(0, MAX_DESCRIPTION_LENGTH - 1) + '...'
   elModal.querySelector('.book-description').innerText = bookDescriptionShortened
@@ -94,17 +97,16 @@ function onReadBook(bookId) {
 
 function renderMaxPriceFilter() {
   const elMaxPriceSlider = document.querySelector('.max-price-slider')
-  const elCurrMaxPrice = document.querySelector('.curr-max-price')
   const maxBookPrice = getMaxBookPrice()
   elMaxPriceSlider.max = maxBookPrice
-  elCurrMaxPrice.innerText = elMaxPriceSlider.value
+
+  formatFilterPrice()
 }
 
 function onDeleteBook(bookId) {
   deleteBook(bookId)
   renderBooksTable()
   renderMaxPriceFilter()
-  // flashMsg(`Book Deleted`)
 }
 
 function onAddBook() {
@@ -112,10 +114,10 @@ function onAddBook() {
   const price = +prompt('Book price:')
 
   if (name && name.trim().length > 0 && !isNaN(price) && price >= 0) {
-    const book = addBook(name, price)
+    addBook(name, price)
     renderBooksTable()
+    doTrans()
     renderMaxPriceFilter()
-    // flashMsg(`Book Added (id: ${book.id})`)
   }
 }
 
@@ -124,16 +126,16 @@ function onUpdateBook(bookId) {
   if (!isNaN(price) && price >= 0) {
     updateBook(bookId, { price })
     renderBooksTable()
+    doTrans()
     renderMaxPriceFilter()
-    // flashMsg(`Book Added (id: ${book.id})`)
   }
 }
 
 function onUpdateBookRating(rate) {
-  if (currentlyReadBook.rate + rate > 10 || currentlyReadBook.rate + rate < 0) return
-  updateBook(currentlyReadBook.id, { rate: currentlyReadBook.rate + rate })
+  if (gCurrentlyReadBook.rate + rate > 10 || gCurrentlyReadBook.rate + rate < 0) return
+  updateBook(gCurrentlyReadBook.id, { rate: gCurrentlyReadBook.rate + rate })
   const elBookRating = document.querySelector('.book-rating')
-  elBookRating.innerText = currentlyReadBook.rate
+  elBookRating.innerText = gCurrentlyReadBook.rate
 }
 
 function onSetFilterBy(filterBy) {
@@ -141,11 +143,17 @@ function onSetFilterBy(filterBy) {
   setQueryStringParams()
   renderMaxPriceFilter()
   renderBooksTable()
+  doTrans()
   initPagination()
 }
 
 function renderFilterByQueryStringParams() {
   const queryStringParams = new URLSearchParams(window.location.search)
+
+  const lang = queryStringParams.get('lang')
+
+  if (lang) updateLocale(lang)
+
   const filterBy = {
     name: queryStringParams.get('name') || '',
     maxPrice: +queryStringParams.get('maxPrice') || Infinity,
@@ -168,12 +176,16 @@ function renderFilterByQueryStringParams() {
 function onCloseModal() {
   document.querySelector('.modal-background').classList.add('closed')
   document.querySelector('.modal').classList.add('closed')
-  currentlyReadBook = null
+  gCurrentlyReadBook = null
   setQueryStringParams()
 }
 
+function getgCurrentlyReadBook() {
+  return gCurrentlyReadBook
+}
+
 function setQueryStringParams() {
-  const queryStringParams = getQueryStringParams() + '&book=' + (currentlyReadBook ? currentlyReadBook.id : '')
+  const queryStringParams = getQueryStringParams() + '&book=' + (gCurrentlyReadBook ? gCurrentlyReadBook.id : '') + '&lang=' + getLang()
   const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + queryStringParams
   window.history.pushState({ path: newUrl }, '', newUrl)
 }
@@ -187,6 +199,29 @@ function onPageChange(change) {
   const pagination = changePage(change)
   if (pagination.pageChanged) {
     renderBooksTable()
+    doTrans()
     renderPagination(pagination)
+  }
+}
+
+function configureSwiping() {
+  const elModal = document.querySelector('.modal')
+  const hammertime = new Hammer(elModal)
+  hammertime.on('swiperight swipeleft', (ev) => {
+    if (ev.type === 'swipeleft') {
+      onSwipe(true)
+    } else if (ev.type === 'swiperight') {
+      onSwipe(false)
+    }
+  })
+}
+
+function onSwipe(isLeft) {
+  if (isLeft) {
+    if (!gCurrentlyReadBook.prev) return
+    onReadBook(gCurrentlyReadBook.prev)
+  } else {
+    if (!gCurrentlyReadBook.next) return
+    onReadBook(gCurrentlyReadBook.next)
   }
 }

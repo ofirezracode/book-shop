@@ -62,22 +62,16 @@ const locales = [
 
 let gCurrLocale = locales[0]
 
-function doTrans() {
-  var els = document.querySelectorAll('[data-trans]')
-  els.forEach((el) => {
-    const transKey = el.dataset.trans
-    const transTxt = getTrans(transKey)
-    if (el.placeholder) el.placeholder = transTxt
-    else el.innerText = transTxt
-  })
-}
-
 function getTrans(transKey) {
   const transMap = gTrans[transKey]
   if (!transMap) return 'UNKNOWN'
   let transTxt = transMap[gCurrLocale.lang]
   if (!transTxt) transTxt = transMap.en
   return transTxt
+}
+
+function getLang() {
+  return gCurrLocale.lang
 }
 
 function updateLocale(locale) {
@@ -89,6 +83,7 @@ function isCurrLocale(locale) {
 }
 
 function isRtl(locale) {
+  console.log('locale', locale)
   return locales.find((loc) => locale === loc.lang).isRtl
 }
 
